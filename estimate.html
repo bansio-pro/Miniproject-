@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Estimation | BuildEasy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">BuildEasy</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="materials.html">Materials</a>
+        <a href="estimate.html">Estimate</a>
+        <a href="orders.html">Orders</a>
+    </nav>
+</header>
+
+<section class="auth-container">
+    <h2>Material Estimation</h2>
+
+    <input type="number" id="length" placeholder="Room Length (meters)">
+    <input type="number" id="width" placeholder="Room Width (meters)">
+    
+    <select id="type">
+        <option value="normal">Normal Construction</option>
+        <option value="premium">Premium Construction</option>
+    </select>
+
+    <button onclick="calculate()">Estimate Materials</button>
+
+    <div id="result"></div>
+</section>
+
+<script src="estimate.js"></script>
+</body>
+</html>
