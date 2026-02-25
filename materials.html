@@ -1,29 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Materials | BuildEasy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Materials | BuildEasy</title>
+    <meta name="description"
+        content="Browse and order quality construction materials with real-time pricing and budget filtering.">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
 
-<header class="header">
-    <div class="logo">BuildEasy</div>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="materials.html">Materials</a>
-        <a href="estimate.html">Estimate</a>
-        <a href="orders.html">Orders</a>
-    </nav>
-</header>
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">Build<span>Easy</span></a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="materials.html" class="active">Order Materials</a>
+                <a href="estimate.html">AI Analyzer</a>
+                <a href="orders.html">Track Delivery</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="login.html" class="nav-cta">Login</a>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
 
-<section class="materials">
-    <h2>Available Construction Materials</h2>
-    <label>Enter your budget (₹):</label>
-    <input type="number" id="budget" placeholder="Max price you can afford">
+    <!-- MATERIALS SECTION -->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="fade-in">Available Construction Materials</h2>
+            <p class="fade-in" style="color: var(--grey-500); margin-bottom: 24px;">Browse real-time prices and order
+                directly from verified suppliers</p>
 
-    <div id="materialList" class="material-grid"></div>
-</section>
-<script src="materials.js"></script>
+            <div class="budget-filter fade-in">
+                <label for="budget">💰 Filter by budget (₹):</label>
+                <input type="number" id="budget" placeholder="Enter max price you can afford">
+            </div>
+
+            <div id="materialList" class="material-grid"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 BuildEasy | Smart Construction Assistant — Mini Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="materials.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

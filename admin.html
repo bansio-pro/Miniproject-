@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | BuildEasy</title>
+    <meta name="description"
+        content="BuildEasy Admin Dashboard — Manage orders, materials, users, and AI analytics for the construction material delivery platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container"></div>
+
+    <!-- ======== SIDEBAR ======== -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-brand">
+            <div class="logo-icon">BE</div>
+            <h2>Build<span>Easy</span></h2>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <div class="nav-item active" data-page="page-dashboard">
+                <span class="icon">📊</span><span class="label">Dashboard Overview</span>
+            </div>
+            <div class="nav-item" data-page="page-users">
+                <span class="icon">👥</span><span class="label">Manage Users</span><span class="badge">24</span>
+            </div>
+            <div class="nav-item" data-page="page-suppliers">
+                <span class="icon">🏭</span><span class="label">Manage Suppliers</span>
+            </div>
+            <div class="nav-item" data-page="page-inventory">
+                <span class="icon">📦</span><span class="label">Materials Inventory</span>
+            </div>
+            <div class="nav-item" data-page="page-orders">
+                <span class="icon">🛒</span><span class="label">Orders Management</span><span class="badge">8</span>
+            </div>
+            <div class="nav-section-label">Operations</div>
+            <div class="nav-item" data-page="page-delivery">
+                <span class="icon">🚚</span><span class="label">Delivery Scheduling</span>
+            </div>
+            <div class="nav-item" data-page="page-analytics">
+                <span class="icon">🤖</span><span class="label">AI Analytics</span>
+            </div>
+            <div class="nav-item" data-page="page-reports">
+                <span class="icon">📈</span><span class="label">Reports</span>
+            </div>
+            <div class="nav-section-label">System</div>
+            <div class="nav-item" data-page="page-settings">
+                <span class="icon">⚙️</span><span class="label">Settings</span>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">AD</div>
+            <div class="info">
+                <h4>Admin User</h4>
+                <p>Super Admin</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ======== TOP BAR ======== -->
+    <header class="admin-topbar">
+        <div class="topbar-left">
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+            <div>
+                <div class="page-title">Dashboard Overview</div>
+                <div class="breadcrumb">Admin / Dashboard Overview</div>
+            </div>
+        </div>
+        <div class="topbar-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search anything…" id="globalSearch">
+        </div>
+        <div class="topbar-right">
+            <button class="topbar-btn" title="Notifications">🔔<span class="notif-dot"></span></button>
+            <button class="topbar-btn" title="Messages">💬</button>
+            <div class="topbar-profile">
+                <div class="avatar">AD</div>
+                <div>
+                    <div class="name">Admin</div>
+                    <div class="role">Super Admin</div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="window.location.href='login.html'">🚪 Logout</button>
+        </div>
+    </header>
+
+    <!-- ======== MAIN CONTENT ======== -->
+    <main class="admin-main">
+
+        <!-- ===== DASHBOARD OVERVIEW ===== -->
+        <section class="admin-page active" id="page-dashboard">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="card-icon blue">🛒</div>
+                    <h3>1,284</h3>
+                    <p>Total Orders</p>
+                    <div class="trend up">↑ 12.5% this month</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon green">🚚</div>
+                    <h3>48</h3>
+                    <p>Active Deliveries</p>
+                    <div class="trend up">↑ 8.3% this week</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon orange">👥</div>
+                    <h3>3,672</h3>
+                    <p>Registered Users</p>
+                    <div class="trend up">↑ 5.2% this month</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon purple">🤖</div>
+                    <h3>156</h3>
+                    <p>AI Predictions Today</p>
+                    <div class="trend up">↑ 22% vs yesterday</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h4>📊 Monthly Order Statistics</h4>
+                    <div style="height:280px"><canvas id="ordersChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <h4>📈 Material Demand Trends</h4>
+                    <div style="height:280px"><canvas id="demandChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Recent Orders + Low Stock -->
+            <div class="bottom-row">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h4>🕐 Recent Orders</h4>
+                        <button class="btn-sm btn-accent"
+                            onclick="document.querySelector('[data-page=page-orders]').click()">View All</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Material</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD-2041</td>
+                                <td>Rajesh Kumar</td>
+                                <td>OPC Cement (50 bags)</td>
+                                <td>23 Feb 2026</td>
+                                <td><span class="status-badge placed">Placed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2040</td>
+                                <td>Priya Sharma</td>
+                                <td>TMT Steel (200 kg)</td>
+                                <td>23 Feb 2026</td>
+                                <td><span class="status-badge dispatched">Dispatched</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2039</td>
+                                <td>Arun Patel</td>
+                                <td>River Sand (2 tons)</td>
+                                <td>22 Feb 2026</td>
+                                <td><span class="status-badge delivered">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2038</td>
+                                <td>Meena Das</td>
+                                <td>Red Bricks (1000 pcs)</td>
+                                <td>22 Feb 2026</td>
+                                <td><span class="status-badge delivered">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2037</td>
+                                <td>Vikram Singh</td>
+                                <td>AAC Blocks (500 pcs)</td>
+                                <td>21 Feb 2026</td>
+                                <td><span class="status-badge cancelled">Cancelled</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2036</td>
+                                <td>Sneha Reddy</td>
+                                <td>M-Sand (3 tons)</td>
+                                <td>21 Feb 2026</td>
+                                <td><span class="status-badge dispatched">Dispatched</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alerts-card">
+                    <h4>🚨 Low Stock Alerts</h4>
+                    <div class="alert-item">
+                        <div class="alert-info">
+                            <h5>OPC Cement 53 Grade</h5>
+                            <p>Supplier: ACC Limited</p>
+                        </div>
+                        <div class="alert-qty critical">12 bags</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="alert-info">
+                            <h5>TMT Steel 8mm</h5>
+                            <p>Supplier: Tata Steel</p>
+                        </div>
+                        <div class="alert-qty critical">45 kg</div>
+                    </div>
+                    <div class="alert-item warning">
+                        <div class="alert-info">
+                            <h5>River Sand (Fine)</h5>
+                            <p>Supplier: Local Quarry</p>
+                        </div>
+                        <div class="alert-qty low">0.8 tons</div>
+                    </div>
+                    <div class="alert-item warning">
+                        <div class="alert-info">
+                            <h5>AAC Blocks 6"</h5>
+                            <p>Supplier: Ultratech</p>
+                        </div>
+                        <div class="alert-qty low">120 pcs</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="alert-info">
+                            <h5>PPC Cement</h5>
+                            <p>Supplier: Ambuja</p>
+                        </div>
+                        <div class="alert-qty critical">8 bags</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== MANAGE USERS ===== -->
+        <section class="admin-page" id="page-users">
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>👥 Registered Users</h4><button class="btn-sm btn-accent">+ Add User</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#U-101</td>
+                            <td>Rajesh Kumar</td>
+                            <td>rajesh@email.com</td>
+                            <td>Customer</td>
+                            <td>15 Jan 2026</td>
+                            <td><span class="status-badge delivered">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#U-102</td>
+                            <td>Priya Sharma</td>
+                            <td>priya@email.com</td>
+                            <td>Customer</td>
+                            <td>20 Jan 2026</td>
+                            <td><span class="status-badge delivered">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#U-103</td>
+                            <td>Vikram Singh</td>
+                            <td>vikram@email.com</td>
+                            <td>Supplier</td>
+                            <td>28 Jan 2026</td>
+                            <td><span class="status-badge dispatched">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>#U-104</td>
+                            <td>Arun Patel</td>
+                            <td>arun@email.com</td>
+                            <td>Customer</td>
+                            <td>02 Feb 2026</td>
+                            <td><span class="status-badge delivered">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#U-105</td>
+                            <td>Meena Das</td>
+                            <td>meena@email.com</td>
+                            <td>Supplier</td>
+                            <td>10 Feb 2026</td>
+                            <td><span class="status-badge cancelled">Inactive</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== MANAGE SUPPLIERS ===== -->
+        <section class="admin-page" id="page-suppliers">
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>🏭 Suppliers</h4><button class="btn-sm btn-accent">+ Add Supplier</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Company</th>
+                            <th>Contact</th>
+                            <th>Materials</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#S-01</td>
+                            <td>ACC Limited</td>
+                            <td>acc@supplier.com</td>
+                            <td>Cement, Concrete</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td><span class="status-badge delivered">Verified</span></td>
+                        </tr>
+                        <tr>
+                            <td>#S-02</td>
+                            <td>Tata Steel</td>
+                            <td>tata@supplier.com</td>
+                            <td>TMT Steel, Rods</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td><span class="status-badge delivered">Verified</span></td>
+                        </tr>
+                        <tr>
+                            <td>#S-03</td>
+                            <td>Ultratech</td>
+                            <td>ultra@supplier.com</td>
+                            <td>Cement, AAC Blocks</td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td><span class="status-badge delivered">Verified</span></td>
+                        </tr>
+                        <tr>
+                            <td>#S-04</td>
+                            <td>Local Sand Quarry</td>
+                            <td>quarry@local.com</td>
+                            <td>Sand, Gravel</td>
+                            <td>⭐⭐⭐</td>
+                            <td><span class="status-badge dispatched">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== MATERIALS INVENTORY ===== -->
+        <section class="admin-page" id="page-inventory">
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>📦 Materials Inventory</h4><button class="btn-sm btn-accent" data-open-modal>+ Add
+                        Material</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Stock Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OPC Cement 53 Grade</td>
+                            <td>Cement</td>
+                            <td>₹380/bag</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill low" style="width:12%"></div>
+                                    </div>
+                                    <div class="stock-label">12 bags</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge cancelled">Critical</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('OPC Cement')">Edit</button><button
+                                        class="action-btn delete" onclick="deleteMaterial('OPC Cement')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PPC Cement</td>
+                            <td>Cement</td>
+                            <td>₹350/bag</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill low" style="width:8%"></div>
+                                    </div>
+                                    <div class="stock-label">8 bags</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge cancelled">Critical</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('PPC Cement')">Edit</button><button
+                                        class="action-btn delete" onclick="deleteMaterial('PPC Cement')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TMT Steel 8mm</td>
+                            <td>Steel</td>
+                            <td>₹65/kg</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill medium" style="width:35%"></div>
+                                    </div>
+                                    <div class="stock-label">350 kg</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge dispatched">Low</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('TMT Steel')">Edit</button><button
+                                        class="action-btn delete" onclick="deleteMaterial('TMT Steel')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>River Sand (Fine)</td>
+                            <td>Sand</td>
+                            <td>₹2,800/ton</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill medium" style="width:40%"></div>
+                                    </div>
+                                    <div class="stock-label">4 tons</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge dispatched">Low</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('River Sand')">Edit</button><button
+                                        class="action-btn delete" onclick="deleteMaterial('River Sand')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Red Bricks (Standard)</td>
+                            <td>Bricks</td>
+                            <td>₹8/piece</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill good" style="width:78%"></div>
+                                    </div>
+                                    <div class="stock-label">7,800 pcs</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge delivered">Adequate</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('Red Bricks')">Edit</button><button
+                                        class="action-btn delete" onclick="deleteMaterial('Red Bricks')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>M-Sand</td>
+                            <td>Sand</td>
+                            <td>₹3,200/ton</td>
+                            <td>
+                                <div class="stock-bar-wrap">
+                                    <div class="stock-bar">
+                                        <div class="fill good" style="width:65%"></div>
+                                    </div>
+                                    <div class="stock-label">6.5 tons</div>
+                                </div>
+                            </td>
+                            <td><span class="status-badge delivered">Adequate</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn edit"
+                                        onclick="editMaterial('M-Sand')">Edit</button><button class="action-btn delete"
+                                        onclick="deleteMaterial('M-Sand')">Delete</button></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== ORDERS MANAGEMENT ===== -->
+        <section class="admin-page" id="page-orders">
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>🛒 Orders Management</h4><button class="btn-sm btn-accent">Export CSV</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Material</th>
+                            <th>Qty</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#ORD-2041</td>
+                            <td>Rajesh Kumar</td>
+                            <td>OPC Cement</td>
+                            <td>50 bags</td>
+                            <td>23 Feb</td>
+                            <td><span class="status-badge placed">Placed</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2041')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2041')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2041')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2040</td>
+                            <td>Priya Sharma</td>
+                            <td>TMT Steel</td>
+                            <td>200 kg</td>
+                            <td>23 Feb</td>
+                            <td><span class="status-badge dispatched">Dispatched</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2040')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2040')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2040')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2039</td>
+                            <td>Arun Patel</td>
+                            <td>River Sand</td>
+                            <td>2 tons</td>
+                            <td>22 Feb</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2039')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2039')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2039')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2038</td>
+                            <td>Meena Das</td>
+                            <td>Red Bricks</td>
+                            <td>1000 pcs</td>
+                            <td>22 Feb</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2038')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2038')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2038')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2037</td>
+                            <td>Vikram Singh</td>
+                            <td>AAC Blocks</td>
+                            <td>500 pcs</td>
+                            <td>21 Feb</td>
+                            <td><span class="status-badge cancelled">Cancelled</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2037')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2037')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2037')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2036</td>
+                            <td>Sneha Reddy</td>
+                            <td>M-Sand</td>
+                            <td>3 tons</td>
+                            <td>21 Feb</td>
+                            <td><span class="status-badge dispatched">Dispatched</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2036')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2036')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2036')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2035</td>
+                            <td>Karthik M</td>
+                            <td>PPC Cement</td>
+                            <td>30 bags</td>
+                            <td>20 Feb</td>
+                            <td><span class="status-badge placed">Placed</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2035')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2035')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2035')">Cancel</button></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-2034</td>
+                            <td>Divya N</td>
+                            <td>Plywood</td>
+                            <td>20 sheets</td>
+                            <td>20 Feb</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                            <td>
+                                <div class="action-btns"><button class="action-btn approve"
+                                        onclick="approveOrder('2034')">Approve</button><button
+                                        class="action-btn dispatch"
+                                        onclick="dispatchOrder('2034')">Dispatch</button><button
+                                        class="action-btn cancel" onclick="cancelOrder('2034')">Cancel</button></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== DELIVERY SCHEDULING ===== -->
+        <section class="admin-page" id="page-delivery">
+            <div class="table-card">
+                <div class="table-header">
+                    <h4>🚚 Delivery Schedule</h4><button class="btn-sm btn-accent">+ Schedule Delivery</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Delivery ID</th>
+                            <th>Order</th>
+                            <th>Driver</th>
+                            <th>Route</th>
+                            <th>ETA</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#DL-501</td>
+                            <td>#ORD-2041</td>
+                            <td>Sundar M</td>
+                            <td>Warehouse → T. Nagar</td>
+                            <td>2:30 PM</td>
+                            <td><span class="status-badge placed">Scheduled</span></td>
+                        </tr>
+                        <tr>
+                            <td>#DL-500</td>
+                            <td>#ORD-2040</td>
+                            <td>Ravi K</td>
+                            <td>Warehouse → Adyar</td>
+                            <td>1:15 PM</td>
+                            <td><span class="status-badge dispatched">In Transit</span></td>
+                        </tr>
+                        <tr>
+                            <td>#DL-499</td>
+                            <td>#ORD-2039</td>
+                            <td>Mohan R</td>
+                            <td>Warehouse → Velachery</td>
+                            <td>Completed</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td>#DL-498</td>
+                            <td>#ORD-2036</td>
+                            <td>Karthik S</td>
+                            <td>Warehouse → Anna Nagar</td>
+                            <td>3:45 PM</td>
+                            <td><span class="status-badge dispatched">In Transit</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== AI ANALYTICS ===== -->
+        <section class="admin-page" id="page-analytics">
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>🏗️ Construction Stage Detection</h4>
+                    <div style="height:260px"><canvas id="stageChart"></canvas></div>
+                </div>
+                <div class="analytics-card">
+                    <h4>📦 Most Ordered Materials</h4>
+                    <div style="height:260px"><canvas id="topMaterialsChart"></canvas></div>
+                </div>
+            </div>
+            <div class="analytics-card" style="margin-bottom:28px">
+                <h4>🏆 Supplier Performance Ranking</h4>
+                <div class="rank-item">
+                    <div class="rank-num gold">1</div>
+                    <div class="rank-info">
+                        <h5>ACC Limited</h5>
+                        <p>Cement & Concrete — 98.5% on-time delivery</p>
+                    </div>
+                    <div class="rank-stars">★★★★★</div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-num gold">2</div>
+                    <div class="rank-info">
+                        <h5>Tata Steel</h5>
+                        <p>TMT Steel & Rods — 97.2% on-time delivery</p>
+                    </div>
+                    <div class="rank-stars">★★★★★</div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-num silver">3</div>
+                    <div class="rank-info">
+                        <h5>Ultratech</h5>
+                        <p>Cement & AAC Blocks — 94.8% on-time delivery</p>
+                    </div>
+                    <div class="rank-stars">★★★★☆</div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-num silver">4</div>
+                    <div class="rank-info">
+                        <h5>Ambuja Cements</h5>
+                        <p>PPC Cement — 92.1% on-time delivery</p>
+                    </div>
+                    <div class="rank-stars">★★★★☆</div>
+                </div>
+                <div class="rank-item">
+                    <div class="rank-num bronze">5</div>
+                    <div class="rank-info">
+                        <h5>Local Sand Quarry</h5>
+                        <p>Sand & Gravel — 85.4% on-time delivery</p>
+                    </div>
+                    <div class="rank-stars">★★★☆☆</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== REPORTS ===== -->
+        <section class="admin-page" id="page-reports">
+            <div class="summary-grid" style="margin-bottom:24px">
+                <div class="summary-card">
+                    <div class="card-icon blue">💰</div>
+                    <h3>₹24.8L</h3>
+                    <p>Total Revenue (Feb)</p>
+                    <div class="trend up">↑ 18% vs Jan</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon green">📦</div>
+                    <h3>342</h3>
+                    <p>Orders This Month</p>
+                    <div class="trend up">↑ 14% vs Jan</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon orange">⏱️</div>
+                    <h3>2.4 hrs</h3>
+                    <p>Avg Delivery Time</p>
+                    <div class="trend down">↓ 12% faster</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon purple">⭐</div>
+                    <h3>4.7/5</h3>
+                    <p>Customer Satisfaction</p>
+                    <div class="trend up">↑ 0.3 pts</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h4>📊 Revenue Overview (6 Months)</h4>
+                <div style="height:280px"><canvas id="revenueChart"></canvas></div>
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section class="admin-page" id="page-settings">
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h4>👤 Profile Settings</h4>
+                    <div class="form-group"><label>Full Name</label><input type="text" value="Admin User"></div>
+                    <div class="form-group"><label>Email</label><input type="email" value="admin@buildeasy.com"></div>
+                    <div class="form-group"><label>Phone</label><input type="tel" value="+91 98765 43210"></div>
+                    <div class="form-group"><label>Role</label><input type="text" value="Super Admin" disabled></div>
+                    <button class="btn-sm btn-accent" style="margin-top:8px"
+                        onclick="showToast('Profile updated!','success')">Save Changes</button>
+                </div>
+                <div class="settings-card">
+                    <h4>🔔 Notifications</h4>
+                    <div class="toggle-row">
+                        <div><label>Email Notifications</label>
+                            <p>Receive order updates via email</p>
+                        </div><button class="toggle active"></button>
+                    </div>
+                    <div class="toggle-row">
+                        <div><label>SMS Alerts</label>
+                            <p>Get SMS for critical stock alerts</p>
+                        </div><button class="toggle active"></button>
+                    </div>
+                    <div class="toggle-row">
+                        <div><label>Push Notifications</label>
+                            <p>Browser push for new orders</p>
+                        </div><button class="toggle"></button>
+                    </div>
+                    <div class="toggle-row">
+                        <div><label>Weekly Reports</label>
+                            <p>Auto-send weekly summary reports</p>
+                        </div><button class="toggle active"></button>
+                    </div>
+                    <div class="toggle-row">
+                        <div><label>AI Insights</label>
+                            <p>Daily AI prediction summaries</p>
+                        </div><button class="toggle"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== ADD MATERIAL MODAL ===== -->
+    <div class="modal-overlay" id="materialModal">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Add New Material</h3><button class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label>Material Name</label><input type="text"
+                        placeholder="e.g. OPC Cement 43 Grade"></div>
+                <div class="form-group"><label>Category</label>
+                    <select>
+                        <option>Cement</option>
+                        <option>Steel</option>
+                        <option>Sand</option>
+                        <option>Bricks</option>
+                        <option>Wood</option>
+                        <option>Paint</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Price (₹)</label><input type="number" placeholder="e.g. 380"></div>
+                <div class="form-group"><label>Stock Quantity</label><input type="number" placeholder="e.g. 500"></div>
+                <div class="form-group"><label>Supplier</label><input type="text" placeholder="e.g. ACC Limited"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal ghost"
+                    onclick="document.getElementById('materialModal').classList.remove('active')">Cancel</button>
+                <button class="btn-modal primary">Add Material</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+        // Revenue chart for Reports page (initialized when navigated to)
+        const revObs = new MutationObserver(() => {
+            const rc = document.getElementById('revenueChart');
+            if (rc && document.getElementById('page-reports').classList.contains('active') && !rc._done) {
+                rc._done = true;
+                new Chart(rc, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+                        datasets: [{
+                            label: 'Revenue (₹ Lakhs)', data: [16.2, 18.5, 20.1, 19.8, 21.0, 24.8],
+                            backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 6, barThickness: 28
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 } } }, x: { grid: { display: false }, ticks: { font: { size: 11 } } } }
+                    }
+                });
+            }
+        });
+        revObs.observe(document.getElementById('page-reports'), { attributes: true, attributeFilter: ['class'] });
+    </script>
+</body>
+
+</html>
